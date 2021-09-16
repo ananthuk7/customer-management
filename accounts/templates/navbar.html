@@ -13,5 +13,9 @@
                 <a class="nav-link" href="{%url 'products'%}">Products</a>
             </li>
         </ul>
+        <div class="text-white ml-auto d-flex">
+            <h5>hi {{ request.user }}</h5>
+            <a class="pl-3 text-white" href="{%url 'logout'%}">logout</a>
+        </div>
     </div>
 </nav>
