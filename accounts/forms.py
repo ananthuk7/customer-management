@@ -4,6 +4,7 @@ from accounts.models import Customer,Order
 
 
 
+
 class CreateCustomerForm(ModelForm):
     class Meta:
         model = Customer
