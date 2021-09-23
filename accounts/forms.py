@@ -9,7 +9,7 @@ from django.contrib.auth.forms import User
 class CreateCustomerForm(ModelForm):
     class Meta:
         model = Customer
-        fields = '__all__'
+        fields = ['name','email','phone','profile_pic']
 
 
 class UpdateCustomerForm(ModelForm):

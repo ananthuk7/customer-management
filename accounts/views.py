@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .decorators import user_login_page,allowed_user,admin_only
+from django.contrib.auth.models import Group
 # Create your views here.
 
 
@@ -55,6 +56,11 @@ def create_customer(request):
         context = {'form': form}
         if form.is_valid():
             form.save()
+            username=form.cleaned_data['username']
+            
+            
+           
+            messages.success(request, 'account was created successfully'+ username)
             return redirect('home')
         else:
             return render(request, 'customercreate.html', context)
@@ -153,7 +159,30 @@ def user_logout(request):
     logout(request)
     return redirect('login')
 
-
+@login_required(login_url='login')
+@allowed_user(allowed_role=['customer'])
 def user_home_page(request):
-    context = {}
+   
+    orders=request.user.customer.order_set.all()
+    total_orders = orders.count()
+    orders_delivered = orders.filter(status='Delivered').count()
+    orders_pending = orders.filter(status='Pending').count()
+    context = {'orders': orders, 'orders_delivered': orders_delivered,
+               'orders_pending': orders_pending, 'total_orders': total_orders}
     return render(request, 'user.html', context)
+
+@login_required(login_url='login')
+@allowed_user(allowed_role=['customer'])
+def customer_settings(request):
+    customer= request.user.customer
+    form= CreateCustomerForm(instance=customer)
+    context={'form':form}
+    if request.method == 'POST':
+        form=CreateCustomerForm(request.POST,request.FILES,instance=customer)
+        if form.is_valid():
+            form.save()
+            context={'form':form}
+            return render(request, 'usersettings.html',context)
+
+    return render(request, 'usersettings.html',context)
+    
