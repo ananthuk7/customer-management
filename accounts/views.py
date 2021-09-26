@@ -175,7 +175,7 @@ def user_home_page(request):
 @allowed_user(allowed_role=['customer'])
 def customer_settings(request):
     customer= request.user.customer
-    form= CreateCustomerForm(instance=customer)
+    form= CreateCustomerForm(instance=customer,files=request.FILES)
     context={'form':form}
     if request.method == 'POST':
         form=CreateCustomerForm(request.POST,request.FILES,instance=customer)
